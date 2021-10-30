@@ -20,25 +20,41 @@ namespace Dungeon_Battles_of_Winterspell
     }
 
     /// <summary>
-    /// This class identifies the player and contains idle and updating properties to represent the character. The defaults will vary depended upon the player type enum passed into the constructor.
+    /// This class identifies the player and contains idle and updating properties to represent the character. The defaults will vary depended upon the player type enum passed into the con
     /// </summary>
-    public class PlayerCharacter
+    public class PlayerCharacter : ICharacter
     {
         /// <summary>
         /// Upon player having picked a character with user input, the enum of character type will be set. This will be passed into the character when created.
         /// PlayerCharacter knowing the CharacterType will determine every other aspect of calculation for the char.
         /// </summary>
         /// <param name="playerType"></param>
-        public PlayerCharacter (CharacterType playerType)
+        public PlayerCharacter(CharacterType playerType)
         {
             this.PlayerType = playerType;
         }
 
-        // Current and updating health of character
-        public int Health { get; set; }
+        // Interface requirement
+        public bool CanAttack { get; set; } = true;
+
+        // Current and updating health of character. The defualts vary depending on the character type.
+        public int Health { get; private set; } = 100;
 
         // If true, player has the ability to be added to a turn queue of turn phase
-        public bool HasSwiftness { get; set; }
+        public bool HasSwiftness
+        {
+            get
+            {
+                if (PlayerType == CharacterType.Dwarf)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 
         // Readonly so it can be passed in when the character is created using user input.
         public CharacterType PlayerType { get; }
@@ -122,17 +138,16 @@ namespace Dungeon_Battles_of_Winterspell
         /// When a character takes damage from another character, the health is checked to verify if dead is true or false, and also sets the current health.
         /// </summary>
         /// <param name="attack"></param>
-        public void DamageTaken(Attack attack)
-        {
-            int currHealth = this.Health - attack.DamageInflicted;
-            IsDead(currHealth); // Checks if the player is dead or not.
-        }
+        //public void DamageTaken(Attack attack)
+        //{
+        //    int currHealth = this.Health - attack.DamageInflicted;
+        //    IsDead(currHealth); // Checks if the player is dead or not.
+        //}
 
         /// <summary>
         /// Checks that the current health of the player when damage is taken, is not at or below 0. If it is not, return false. If yes, return true.
         /// </summary>
         /// <param name="currentHealth"></param>
-        /// <returns></returns>
         public bool IsDead(int currentHealth)
         {
             if (currentHealth <= 0)
@@ -146,5 +161,32 @@ namespace Dungeon_Battles_of_Winterspell
                 return false;
             }
         }
+
+
     }
 }
+
+// Setting health to a defualt of 100 b/c ro can't be changed, but will fix later.
+
+//public int Health
+//{
+//    get
+//    {
+//        int health = 0;
+//        switch (PlayerType)
+//        {
+//            case CharacterType.Dwarf:
+//                health = 125;
+//                break;
+//            case CharacterType.Enchantress:
+//                health = 110;
+//                break;
+//            case CharacterType.Woodelf:
+//                health = 100;
+//                break;
+//            default:
+//                return 100; // This should never be reached.
+//        }
+//        return health;
+//    }
+//}

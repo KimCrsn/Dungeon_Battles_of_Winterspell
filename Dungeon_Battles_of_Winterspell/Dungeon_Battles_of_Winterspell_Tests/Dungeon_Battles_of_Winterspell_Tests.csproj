@@ -13,4 +13,8 @@
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dungeon_Battles_of_Winterspell\Dungeon_Battles_of_Winterspell.csproj" />
+  </ItemGroup>
+
 </Project>
