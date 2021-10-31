@@ -104,7 +104,7 @@ namespace Dungeon_Battles_of_Winterspell
         /// Takes in a player, so player object stays the same, and player attribute properties can be updated according to user input.
         /// </summary>
         /// <param name="player"></param>
-        public void AllocateAttributes(PlayerCharacter player)
+        public bool AllocateAttributes(PlayerCharacter player)
         {
             Console.Clear();
             int remainingPoints = 10; // The remaining points regardless of the user's input. Declared at 10 but updates based on math within the while statement.
@@ -186,8 +186,23 @@ namespace Dungeon_Battles_of_Winterspell
                 }
             }
 
-            Console.WriteLine("    These are your current skill point totals, are you happy with them?");
-            Console.ReadKey();
+            Console.WriteLine($"    Strength: {player.Strength}     Intellegence: {player.Intelligence}     Dexterity: {player.Dexterity}");
+            bool userHappy = CLIHelper.GetBool("    These are your current skill point totals, are you happy with them? Y/N:  ");
+            
+            if (userHappy)
+            {
+                return true;
+            }
+            else
+            {
+                // Erase history of method. 
+                player.EstablishDexterity();
+                player.EstablishIntelligence();
+                player.EstablishStrength();
+                Console.WriteLine("    You may start again.");
+                Console.ReadKey();
+                return false; // This represents a return of false, to NOT leave menu. When the last method read sees the return, it will  restart the last menu and let the user redo everything.
+            }
         }
 
 

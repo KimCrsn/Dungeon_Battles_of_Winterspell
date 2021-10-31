@@ -56,7 +56,12 @@ namespace Dungeon_Battles_of_Winterspell
 
             // Generate a list of weapon choices by taking in which character was chosen
             weapon.GetWeaponChoices(charType);
-            ui.AllocateAttributes(player);
+
+            bool leaveMenu = false;
+            while (!leaveMenu)
+            {
+                bool leaveMenue = ui.AllocateAttributes(player);
+            }
         }
 
 

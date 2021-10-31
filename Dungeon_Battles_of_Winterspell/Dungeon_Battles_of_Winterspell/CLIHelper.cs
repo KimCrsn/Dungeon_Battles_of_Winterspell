@@ -29,7 +29,7 @@ namespace Dungeon_Battles_of_Winterspell
             while (string.IsNullOrEmpty(userInput));
 
             Console.WriteLine();
-            return userInput;
+            return userInput.ToLower();
         }
 
         public static int GetInteger(string message)
@@ -146,13 +146,6 @@ namespace Dungeon_Battles_of_Winterspell
             pointsBookRS[pointsRemaining] = attInt; // Setting the key = to points remaining and the value to the amount spent.
             return pointsBookRS;
         }
-
-
-
-
-
-
-
 
 
         public static bool GetBool(string message)
