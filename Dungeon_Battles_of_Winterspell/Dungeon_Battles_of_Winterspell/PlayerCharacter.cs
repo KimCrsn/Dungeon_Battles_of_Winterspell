@@ -9,14 +9,8 @@ namespace Dungeon_Battles_of_Winterspell
     {
         Enchantress,
         Dwarf,
-        Woodelf
-    }
-    public enum EnemyType
-    {
-        Goblin,
-        CaveBrute,
-        FireSpitter,
-        Gremlin
+        Woodelf,
+        Uknown
     }
 
     /// <summary>
@@ -40,19 +34,44 @@ namespace Dungeon_Battles_of_Winterspell
         // Current and updating health of character. The defualts vary depending on the character type.
         public int Health { get; private set; } = 100;
 
-        // If true, player has the ability to be added to a turn queue of turn phase
-        public bool HasSwiftness
+        /// <summary>
+        /// Initial establishment of health upon character creation.
+        /// </summary>
+        public void  EstablishHealth()
         {
-            get
+            int currHealth = this.Health;
+            switch (PlayerType)
             {
-                if (PlayerType == CharacterType.Dwarf)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                case CharacterType.Dwarf:
+                    currHealth = 125;
+                    break;
+                case CharacterType.Enchantress:
+                    currHealth = 110;
+                    break;
+                case CharacterType.Woodelf:
+                    currHealth = 100;
+                    break;
+            }
+            this.Health = currHealth;
+        }
+
+        // If true, player has the ability to be added to a turn queue of turn phase
+        public bool HasSwiftness { get; set; } // Swiftness is based on the dexterity attribute. If it is 3 or higher, then the player does have swiftness. Might need to be private.
+
+        /// <summary>
+        /// This method checks the current amount of dex to determine if swiftness is true or not. This check should be performed immediately during char creation and after the player assigns attributes to their character.
+        /// This is to avoid a readonly derrived property that cannot be changed once set.
+        /// </summary>
+        /// <returns></returns>
+        public void CheckSwiftness()
+        {
+            if (Dexterity >= 4)
+            {
+                HasSwiftness = true;
+            }
+            else
+            {
+                HasSwiftness = false;
             }
         }
 
@@ -67,71 +86,62 @@ namespace Dungeon_Battles_of_Winterspell
         /// <summary>
         /// All attributes have default values determined by their character type.
         /// </summary>
-        public int Strength // Dwarf is most skilled in strength.
+        public int Strength { get; set; } // Dwarf is most skilled in strength.
+
+        public void EstablishStrength()
         {
-            get
+            int strength = 0;
+            switch (PlayerType)
             {
-                int strength = 0;
-                switch (PlayerType)
-                {
-                    case CharacterType.Dwarf:
-                        strength = 4;
-                        break;
-                    case CharacterType.Enchantress:
-                        strength = 0;
-                        break;
-                    case CharacterType.Woodelf:
-                        strength = 1;
-                        break;
-                    default:
-                        return 0; // This should never be reached.
-                }
-                return strength;
+                case CharacterType.Dwarf:
+                    strength = 4;
+                    break;
+                case CharacterType.Enchantress:
+                    strength = 0;
+                    break;
+                case CharacterType.Woodelf:
+                    strength = 0;
+                    break;
             }
+            Strength = strength;
         }
-        public int Intelligence // Enchantress is most skilled in intelligence (magic).
+        public int Intelligence { get; set; } // Enchantress is most skilled in intelligence (magic).
+        public void EstablishIntelligence()
         {
-            get
+            int intelligence = 0;
+            switch (PlayerType)
             {
-                int intelligence = 0;
-                switch (PlayerType)
-                {
-                    case CharacterType.Dwarf:
-                        intelligence = 0;
-                        break;
-                    case CharacterType.Enchantress:
-                        intelligence = 3;
-                        break;
-                    case CharacterType.Woodelf:
-                        intelligence = 0;
-                        break;
-                    default:
-                        return 0; // This should never be reached.
-                }
-                return intelligence;
+                case CharacterType.Dwarf:
+                    intelligence = 0;
+                    break;
+                case CharacterType.Enchantress:
+                    intelligence = 3;
+                    break;
+                case CharacterType.Woodelf:
+                    intelligence = 0;
+                    break;
             }
+            Intelligence = intelligence;
         }
-        public int Dexterity // Woofelf is most skilled in Dexterity.
+        
+        public int Dexterity { get; set; } // Woofelf is most skilled in Dexterity.
+
+        public void EstablishDexterity()
         {
-            get
+            int dexterity = 0;
+            switch (PlayerType)
             {
-                int dexterity = 0;
-                switch (PlayerType)
-                {
-                    case CharacterType.Dwarf:
-                        dexterity = 0;
-                        break;
-                    case CharacterType.Enchantress:
-                        dexterity = 1;
-                        break;
-                    case CharacterType.Woodelf:
-                        dexterity = 3;
-                        break;
-                    default:
-                        return 0; // This should never be reached.
-                }
-                return dexterity;
+                case CharacterType.Dwarf:
+                    dexterity = 0;
+                    break;
+                case CharacterType.Enchantress:
+                    dexterity = 3;
+                    break;
+                case CharacterType.Woodelf:
+                    dexterity = 0;
+                    break;
             }
+            Dexterity = dexterity;
         }
 
         /// <summary>

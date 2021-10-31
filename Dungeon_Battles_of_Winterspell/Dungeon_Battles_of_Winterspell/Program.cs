@@ -6,7 +6,8 @@ namespace Dungeon_Battles_of_Winterspell
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            UserInterface UI = new UserInterface();
+            UI.DisplayCharacterSelect();
         }
     }
 }
