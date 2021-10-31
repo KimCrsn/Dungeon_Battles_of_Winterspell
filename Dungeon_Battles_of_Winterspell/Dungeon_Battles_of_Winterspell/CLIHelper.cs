@@ -96,7 +96,6 @@ namespace Dungeon_Battles_of_Winterspell
                 }
                 else
                 {
-                    Console.WriteLine($"You have chosen to add {attInput} to your {attribute} pool.");
                     //pointsRemaining -= attInput; // Normal subtraction of a positive number within the bounds. This won't do any good b/c we are not returning it or passing it anywhere. Math will be done for GetPoints
                     return true;
                 }
@@ -123,10 +122,6 @@ namespace Dungeon_Battles_of_Winterspell
             {
                 do
             {
-                if (numberOfAttempts > 0)
-                {
-                    Console.WriteLine("    You must enter a number of points to allocate: ");
-                }
                 Console.Write(message + " ");
                 userInput = Console.ReadLine();
                 numberOfAttempts++;
@@ -142,7 +137,7 @@ namespace Dungeon_Battles_of_Winterspell
             // If input is valid, we leave the larger loop and come down to where math on remaining points is done. Could not identify if user input - or + here so a simple if/else will have to do.
             if (attInt < 0)
             {
-                pointsRemaining += attInt;
+                pointsRemaining -= attInt;
             }
             else
             {
