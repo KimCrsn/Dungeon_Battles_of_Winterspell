@@ -108,7 +108,7 @@ namespace Dungeon_Battles_of_Winterspell
         {
             Console.Clear();
             int remainingPoints = 10; // The remaining points regardless of the user's input. Declared at 10 but updates based on math within the while statement.
-            int currAttributeStatus; // This is the player's attribute (str, int, dex points) property within the PlayerCharacter class, represented as an int.
+            //int currAttributeStatus; // This is the player's attribute (str, int, dex points) property within the PlayerCharacter class, represented as an int.
             // int defaultAttributeStat; // This is the players default standard point amount, this is to enforce that however many points were origonally allocated, cannot be taken away. Doesn't work for now as const is not viable here yet.
             // While the user still has points to spend, continue to prompt which attribute to allocate points to, and how many. CLI Helper will take care of the validity of the points.
             while (remainingPoints != 0) // This screen reapears after each allocation of points, but the variables in the strings will be updated. This is for viewing clarity and lack of clutter on screen.
@@ -122,62 +122,16 @@ namespace Dungeon_Battles_of_Winterspell
                 switch (userInput)
                 {
                     case 1: // Strength
-                        currAttributeStatus = player.Strength; // THE PLAYER'S CURRENT STR ATTRIBUTE AMOUNT. (**  For later purposes - a note - When this is first read, it will be the default of the player's attribute. Passing it into a new constant int.)
-                       
-                        // A dictionary holding KEY: updated remaining points, VALUE: userInput (as an int).                                                            //const int defaultStrength = currAttributeStatus; NOT A WAY TO FIND THE DEFAULT STRENGTH UNLESS AN ACCESSIBLE PROPERTY IS PROVIDED IN CLASS.
-                        Dictionary<int, int> strPointsBookRS = CLIHelper.GetPoints("    How much would you like to assign to strength?:   ", currAttributeStatus, remainingPoints, "strength"); // remaining points was 10 at the start.
-                        int strInput = 0; // Declaring purposes to pull the value of the user input from the pointsBook and add it to the strength attribute.
-                        foreach (KeyValuePair<int, int> allocation in strPointsBookRS) // Looping through dictionary to pull the key/value into their own variables for updaing purposes.
-                        {
-                            player.Strength += allocation.Value; // Updating player strength.
-                            remainingPoints = allocation.Key; // Updating remaining points local variable.
-                            strInput = allocation.Value; // Updating user's int input into variable.
-                        }
-                            Console.WriteLine();
-                            Console.WriteLine($"    You have chosen to allocte {strInput} points into strength. You have {remainingPoints} points left to spend.");
-                        
-                        Console.ReadKey();
-                        Console.Clear();
+                        remainingPoints = AllocateStrength(remainingPoints, player);
                         break;
-
 
                     case 2: // Intellegence
-                        currAttributeStatus = player.Intelligence; // THE PLAYER'S CURRENT INT ATTRIBUTE AMOUNT.
-
-                        Dictionary<int, int> intPointsBookRS = CLIHelper.GetPoints("    How much would you like to assign to intelligence?:   ", currAttributeStatus, remainingPoints, "intellegence");
-                        int intInput = 0; // Declaring purposes to pull the value of the user input from the pointsBook and add it to the strength attribute.
-                        foreach (KeyValuePair<int, int> allocation in intPointsBookRS) // Looping through dictionary to pull the key/value into their own variables for updaing purposes.
-                        {
-                            player.Intelligence += allocation.Value; // Updating player strength.
-                            remainingPoints = allocation.Key; // Updating remaining points local variable.
-                            intInput = allocation.Value; // Updating user's int input into variable.
-                        }
-                            Console.WriteLine();
-                            Console.WriteLine($"    You have chosen to allocte {intInput} points into intellegence. You have {remainingPoints} points left to spend.");
-
-                        Console.ReadKey();
-                        Console.Clear();
+                        remainingPoints = AllocateIntellegence(remainingPoints, player);
                         break;
-
 
                     case 3: // Dexterity
-                        currAttributeStatus = player.Dexterity; // THE PLAYER'S CURRENT DEX ATTRIBUTE AMOUNT.
-
-                        Dictionary<int, int> dexPointsBookRS = CLIHelper.GetPoints("    How much would you like to assign to dexterity?:   ", currAttributeStatus, remainingPoints, "dexterity");
-                        int dexInput = 0; // Declaring purposes to pull the value of the user input from the pointsBook and add it to the strength attribute.
-                        foreach (KeyValuePair<int, int> allocation in dexPointsBookRS) // Looping through dictionary to pull the key/value into their own variables for updaing purposes.
-                        {
-                            player.Dexterity += allocation.Value; // Updating player strength.
-                            remainingPoints = allocation.Key; // Updating remaining points local variable.
-                            dexInput = allocation.Value; // Updating user's int input into variable.
-                        }
-                            Console.WriteLine();
-                            Console.WriteLine($"    You have chosen to allocte {dexInput} points into dexterity. You have {remainingPoints} points left to spend.");
-                        
-                        Console.ReadKey();
-                        Console.Clear();
+                        remainingPoints = AllocateDexterity(remainingPoints, player); // Dexterity points allocation
                         break;
-
 
                     default:
                         Console.Clear();
@@ -191,24 +145,102 @@ namespace Dungeon_Battles_of_Winterspell
             
             if (userHappy)
             {
-                return true;
+                return true; // Yes, leave the menu.
             }
             else
             {
-                // Erase history of method. 
-                player.EstablishDexterity();
-                player.EstablishIntelligence();
-                player.EstablishStrength();
+                // Erase history of method. Re-write character attributes and corresponding info.
+                player.EstablishAllTraits();
                 Console.WriteLine("    You may start again.");
                 Console.ReadKey();
-                return false; // This represents a return of false, to NOT leave menu. When the last method read sees the return, it will  restart the last menu and let the user redo everything.
+                return false; // No, do NOT leave menu. When the last method read sees the return, it will  restart the last menu and let the user redo everything.
             }
         }
 
-
-        public void DungeonDisplay()
+        public int AllocateStrength(int remainingPoints, PlayerCharacter player)
         {
-            Console.WriteLine($"Your journey begins, here is your map of dungeons. You may have yet to discover some!\n\n");
+            int currAttributeStatus = player.Strength; // THE PLAYER'S CURRENT STR ATTRIBUTE AMOUNT. (**  For later purposes - a note - When this is first read, it will be the default of the player's attribute. Passing it into a new constant int.)
+
+            // A dictionary holding KEY: updated remaining points, VALUE: userInput (as an int).                                                            //const int defaultStrength = currAttributeStatus; NOT A WAY TO FIND THE DEFAULT STRENGTH UNLESS AN ACCESSIBLE PROPERTY IS PROVIDED IN CLASS.
+            Dictionary<int, int> strPointsBookRS = CLIHelper.GetPoints("    How much would you like to assign to strength?:   ", currAttributeStatus, remainingPoints, "strength"); // remaining points was 10 at the start.
+            int strInput = 0; // Declaring purposes to pull the value of the user input from the pointsBook and add it to the strength attribute.
+            foreach (KeyValuePair<int, int> allocation in strPointsBookRS) // Looping through dictionary to pull the key/value into their own variables for updaing purposes.
+            {
+                player.Strength += allocation.Value; // Updating player strength.
+                remainingPoints = allocation.Key; // Updating remaining points local variable.
+                strInput = allocation.Value; // Updating user's int input into variable.
+            }
+            Console.WriteLine();
+            Console.WriteLine($"    You have chosen to allocte {strInput} points into strength. You have {remainingPoints} points left to spend.");
+
+            Console.ReadKey();
+            Console.Clear();
+            return remainingPoints;
         }
+        public int AllocateIntellegence(int remainingPoints, PlayerCharacter player)
+        {
+            int currAttributeStatus = player.Intelligence; // THE PLAYER'S CURRENT INT ATTRIBUTE AMOUNT.
+
+            Dictionary<int, int> intPointsBookRS = CLIHelper.GetPoints("    How much would you like to assign to intelligence?:   ", currAttributeStatus, remainingPoints, "intellegence");
+            int intInput = 0; // Declaring purposes to pull the value of the user input from the pointsBook and add it to the strength attribute.
+            foreach (KeyValuePair<int, int> allocation in intPointsBookRS) // Looping through dictionary to pull the key/value into their own variables for updaing purposes.
+            {
+                player.Intelligence += allocation.Value; // Updating player strength.
+                remainingPoints = allocation.Key; // Updating remaining points local variable.
+                intInput = allocation.Value; // Updating user's int input into variable.
+            }
+            Console.WriteLine();
+            Console.WriteLine($"    You have chosen to allocte {intInput} points into intellegence. You have {remainingPoints} points left to spend.");
+
+            Console.ReadKey();
+            Console.Clear();
+            return remainingPoints;
+        }
+        public int AllocateDexterity(int remainingPoints, PlayerCharacter player)
+        {
+            int currAttributeStatus = player.Dexterity; // THE PLAYER'S CURRENT DEX ATTRIBUTE AMOUNT.
+
+            Dictionary<int, int> dexPointsBookRS = CLIHelper.GetPoints("    How much would you like to assign to dexterity?:   ", currAttributeStatus, remainingPoints, "dexterity");
+            int dexInput = 0; // Declaring purposes to pull the value of the user input from the pointsBook and add it to the strength attribute.
+            foreach (KeyValuePair<int, int> allocation in dexPointsBookRS) // Looping through dictionary to pull the key/value into their own variables for updaing purposes.
+            {
+                player.Dexterity += allocation.Value; // Updating player strength.
+                remainingPoints = allocation.Key; // Updating remaining points local variable.
+                dexInput = allocation.Value; // Updating user's int input into variable.
+            }
+            Console.WriteLine();
+            Console.WriteLine($"    You have chosen to allocte {dexInput} points into dexterity. You have {remainingPoints} points left to spend.");
+
+            Console.ReadKey();
+            Console.Clear();
+            return remainingPoints;
+        }
+
+        /// <summary>
+        /// Displays the map.
+        /// </summary>
+        /// <param name="dungeons"></param>
+        public void Map(List<Dungeon> dungeons, string worldName)
+        {
+            int num = 0;
+            Console.WriteLine();
+            Console.Write($"{worldName}   -->  ");
+            foreach (Dungeon dungeon in dungeons)
+            {
+                if (num == 3)
+                {
+                    Console.Write("\n");
+                }
+                Console.Write($"{dungeon}...  ");
+                num++;
+            }
+
+        }
+
+        public void DungeonComplete()
+        {
+            Console.WriteLine("You have completed the dungeon!");
+        }
+
     }
 }

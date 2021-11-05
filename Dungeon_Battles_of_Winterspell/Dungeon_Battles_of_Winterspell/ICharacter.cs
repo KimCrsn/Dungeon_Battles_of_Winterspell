@@ -9,7 +9,7 @@ namespace Dungeon_Battles_of_Winterspell
     /// </summary>
     public interface ICharacter
     {
-        public bool CanAttack { get; set; }
-        public bool HasSwiftness { get; set; }
+        public bool HasSwiftness { get; }
+        public string Name { get; }
     }
 }

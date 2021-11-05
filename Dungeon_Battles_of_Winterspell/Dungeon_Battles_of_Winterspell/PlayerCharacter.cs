@@ -28,12 +28,33 @@ namespace Dungeon_Battles_of_Winterspell
             this.PlayerType = playerType;
         }
 
-        // Interface requirement
-        public bool CanAttack { get; set; } = true;
-
+        public string Name 
+        {
+            get
+            {
+                switch (PlayerType)
+                {
+                    case CharacterType.Dwarf:
+                        return "Dwarf";
+                    case CharacterType.Enchantress:
+                        return "Enchantress";
+                    case CharacterType.Woodelf:
+                        return "Woodelf";
+                    default:
+                        return null;
+                }
+            }
+        } // Varies per character type enum
         // Current and updating health of character. The defualts vary depending on the character type.
         public int Health { get; private set; } = 100;
 
+        public void EstablishAllTraits()
+        {
+            EstablishDexterity();
+            EstablishIntelligence();
+            EstablishStrength();
+            CheckSwiftness();
+        }
         /// <summary>
         /// Initial establishment of health upon character creation.
         /// </summary>
@@ -65,7 +86,7 @@ namespace Dungeon_Battles_of_Winterspell
         /// <returns></returns>
         public void CheckSwiftness()
         {
-            if (Dexterity >= 4)
+            if (Dexterity >= 5)
             {
                 HasSwiftness = true;
             }
@@ -135,10 +156,10 @@ namespace Dungeon_Battles_of_Winterspell
                     dexterity = 0;
                     break;
                 case CharacterType.Enchantress:
-                    dexterity = 3;
+                    dexterity = 1;
                     break;
                 case CharacterType.Woodelf:
-                    dexterity = 0;
+                    dexterity = 4;
                     break;
             }
             Dexterity = dexterity;
