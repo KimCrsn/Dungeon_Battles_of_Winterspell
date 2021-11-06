@@ -172,6 +172,10 @@ namespace Dungeon_Battles_of_Winterspell
                 {
                     userInput = "false";
                 }
+                else
+                {
+                    Console.WriteLine("Please choose y for YES or n for NO");
+                }
             }
             while (!bool.TryParse(userInput, out boolValue));
 

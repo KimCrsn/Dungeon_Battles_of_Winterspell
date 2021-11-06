@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Dungeon_Battles_of_Winterspell;
 using DungeonBattles_Of_Winterspell;
 
@@ -10,23 +11,47 @@ namespace DungeonBattles_Of_Winterspell.DisplayText
     {
         //private UserInterface UI = new UserInterface();
 
+        public void LoadingScreen()
+        {
+            bool repeat = true;
+            int times = 0;
+            while (repeat)
+            {
+                if (times == 2)
+                {
+                    repeat = false;
+                }
+                string text = "Loading.......";
+                foreach (char character in text)
+                {
+                    //write out the characters to the screen.
+                    Console.Write(character);
+                    //speed of it beging typed out effect.
+                    Thread.Sleep(200);
+                }
+                times++;
+                Console.Clear();
+            }
+           
+        }
+
         /// <summary>
-        /// Begins the story and game.
+        /// Begins the story and game. Asks a user if they wish to fight, returns a bool true for yes or false for no.
         /// </summary>
-        public void OpeningStoryText()
+        public bool OpeningStoryText()
         {
             TypeEffect typingOutText = new TypeEffect();
-            //InquiriesToPlayer inquiries = new InquiriesToPlayer();
             // Begin the story if game is commenced
-            typingOutText.TypedText("Winterspell has been overtaken by the Goblins of the North, among other foul creatures of the deep.", true);
+            typingOutText.TypedText("Hello traveler! The Town of Winterspell has been overtaken by the dark creatures of the North, Goblins, the Undying and Trolls... Among other foul creatures of the deep.", true);
             //Wait for user to click enter to continue to next line. (This works but if user clicks enter while first line is being typed, it does not wait.
             Console.ReadLine();
             typingOutText.TypedText("They mean to destroy our resources, harbinge our foes and swallow our townsfolk.", true);
             Console.ReadLine();
             typingOutText.TypedText("Winter is come. We yet have been able to scurge the unholy creatures.....", true);
             Console.ReadLine();
-            typingOutText.TypedText("Will you help fight? And save the town of Winterspell?(y/n): ", true);
-            //inquiries.PlayerFightInquiry();
+
+            bool userInput;
+            return userInput = CLIHelper.GetBool("Will you help fight? And save the town of Winterspell?(y/n): ");
         }
 
         public void WhoAreYou()

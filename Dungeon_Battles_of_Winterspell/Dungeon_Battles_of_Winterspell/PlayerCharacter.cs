@@ -27,7 +27,10 @@ namespace Dungeon_Battles_of_Winterspell
         {
             this.PlayerType = playerType;
         }
+        public PlayerCharacter()
+        {
 
+        }
         public string Name 
         {
             get

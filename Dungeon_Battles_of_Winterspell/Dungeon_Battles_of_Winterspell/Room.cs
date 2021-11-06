@@ -7,6 +7,48 @@ namespace Dungeon_Battles_of_Winterspell
 {
     public class Room
     {
+        public Room (DungeonType dungeonType)
+        {
+            this.DungeonType = dungeonType;
+        }
+        public Room ()
+        {
+
+        }
+        public bool IsCleared { get; private set; }
+
+        public DungeonType DungeonType { get; set; }
+        public string Names
+        {
+            get
+            {
+                // Creates a list of room names and descriptions based upon which is the dungeon type.
+                string[] roomNames = new string[7]; // There will always be the same amount of room names per dungeon type.
+
+                if (DungeonType == DungeonType.StilagmiteRuins)
+                {
+                    // Adding a set of room names to the array
+                    roomNames = new string[]
+                    {
+                        "a freezing cave",
+                        "a cavern with intense anger",
+                        "a room that catches the moon's light",
+                        "a dampened forgotten stalactite cave",
+                        "an abhorrent depth",
+                        "a claustrophobic tight space",
+                        "a haunting passage"
+                    };
+                }
+                // More dependent options listed here.
+
+                Random rnd = new Random();
+                int rngNum = rnd.Next(0, 8); // Creates a number between 0 and 7 inclusive representing indexes of the arrays.
+                string name = roomNames[rngNum]; // Equates the property roomName to what a random index is the array (which is dependent on the dungeon type).
+                return name;
+            }
+        }
+
+
         /// <summary>
         /// Returns a list of new EnemyCharacters which are randomized, and the amount of enemies in the list is rng between 1 and 4 inclusive. This will be taken in for queing purposes.
         /// This should be called once the game state is new room, as enemies must be spawned in it. characters represents enemies spawned and the addition of the player character.
@@ -16,7 +58,7 @@ namespace Dungeon_Battles_of_Winterspell
         {
             List<ICharacter> characters = new List<ICharacter>(); // Empty list to add spawened enemies to.
             Random rnd = new Random();
-            int rngNum = rnd.Next(1, 6);  // creates a number between 1 and 5 inclusive. Only want 4 enemies to appear MAX.
+            int rngNum = rnd.Next(1, 6);  // Creates a number between 1 and 5 inclusive. Only want 4 enemies to appear MAX.
             for (int i = 0; i < rngNum; i++)
             {
                 characters.Add(new EnemyCharacter()); // This enemy should be random

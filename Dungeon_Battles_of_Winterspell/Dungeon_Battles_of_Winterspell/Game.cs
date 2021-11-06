@@ -33,7 +33,9 @@ namespace Dungeon_Battles_of_Winterspell
     }
 
     /// <summary>
-    /// This class is for the purpose of executing the creation of the character based upon player choice by calling initial establishments.
+    /// This class is responsible for the executing and the creation of the character based upon player choice by calling initial establishments.
+    /// It is responsible mainly for handling the different game states, and calling to most classes to accomplish methods by which to acheive new states.
+    /// Most instantiations will be done in this class.
     /// </summary>
     public class Game
     {
@@ -43,12 +45,15 @@ namespace Dungeon_Battles_of_Winterspell
         
         public Dungeon CurrentDungeon { get; set; }
 
-        private PlayerCharacter player = new PlayerCharacter(CharacterType.Uknown);
-        private Weapon weapon = new Weapon(WeaponType.Uknown);
+        private PlayerCharacter player = new PlayerCharacter();
+        private Weapon weapon = new Weapon();
         private Dungeon dungeon = new Dungeon();
         private World newWorld = new World();
         private Room room = new Room();
 
+        /// <summary>
+        /// Sets the local class method Dungeons equal to a list of generated dungeons. This is called once at the beginning of the game.
+        /// </summary>
         public void GenerateDungeons()
         {
             // This sets up the property of the class to be equal only once to this generator
@@ -57,7 +62,7 @@ namespace Dungeon_Battles_of_Winterspell
 
         /// <summary>
         /// The CharacterType is retrieved from UI when the UI calls this method. It passes it in the current character type. The method then sets the local field player to the new character which
-        /// the property of CharacterType has been set.
+        /// the property of CharacterType has been set. Many derrived properties can be set with the this charType.
         /// </summary>
         /// <param name="charType"></param>
         public void CreateCharacter(CharacterType charType)
@@ -100,7 +105,7 @@ namespace Dungeon_Battles_of_Winterspell
             switch (gameState)
             {
                 case GameState.NewDungeon:
-                    StateNewDungeon();
+                    StateNewDungeon(); // 
                     CheckGameStates(GameState.NewRoom);
                     break;
                 case GameState.NewRoom:
@@ -122,7 +127,7 @@ namespace Dungeon_Battles_of_Winterspell
             this.CurrentDungeon = dungeon.CheckCurrentDungeon(Dungeons); // This calls the method which will allow for dungeon class to perform functionality of checking the dungeon states. Gets the proeprty of dungeons.
             // Calls to the UI to display the dungeons
             ui.Map(Dungeons, newWorld.ToString());
-
+            CheckGameStates(GameState.NewRoom);
             Console.ReadKey();
         }
 
@@ -132,8 +137,8 @@ namespace Dungeon_Battles_of_Winterspell
             UserInterface ui = new UserInterface();
             StoryText storyText = new StoryText();
 
-            // Check that there are more rooms to generate for the dungeon
-            if (dungeon.RoomsRemaining == 0)
+            // Check that there are more rooms to generate for the dungeon.
+            if (dungeon.RoomsRemaining == 0) // Knowing that dungeon is the current dungeon as it was set as such
             {
                 ui.DungeonComplete();
                 // set dungeon to complete how to find specific dungeon we are on?
@@ -141,8 +146,8 @@ namespace Dungeon_Battles_of_Winterspell
             }
             else
             {
-                dungeon.RoomsRemaining -= 1; // This changes the current count of rooms remaining on the dungoen, how we know it is current??
-                ICollection<ICharacter> turnQueue = room.SpawnedEnemies(player);
+                dungeon.RoomsRemaining -= 1; // This changes the current count of rooms remaining on the dungoen
+                ICollection<ICharacter> turnQueue = room.SpawnedEnemies(player); // Gets the list of enemies and player in a turn queue.
                 storyText.NewRoom(turnQueue);
             }
         }

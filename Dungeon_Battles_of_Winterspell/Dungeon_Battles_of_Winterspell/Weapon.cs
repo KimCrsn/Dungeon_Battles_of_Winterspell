@@ -27,6 +27,10 @@ namespace Dungeon_Battles_of_Winterspell
         {
             this.WeaponType = weaponType;
         }
+        public Weapon ()
+        {
+
+        }
 
         public WeaponType WeaponType { get; }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DungeonBattles_Of_Winterspell.DisplayText;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,14 +9,25 @@ namespace Dungeon_Battles_of_Winterspell
     {
         private Game game = new Game();
         private Weapon weapon = new Weapon(WeaponType.Uknown);
+        TypeEffect typeEffect = new TypeEffect();
 
+        /// <summary>
+        /// The game begins! Displays the first story texts and then the character selection screen.
+        /// </summary>
         public void BeginGame()
         {
-            // Story Text, then...
+            StoryText storyText = new StoryText();
+            //storyText.LoadingScreen();
+            //bool playerWillFight = storyText.OpeningStoryText();
             DisplayCharacterSelect();
         }
 
-        // Displays the menu of character choices, once a player has selected a character, there will be output text and a character type will be set.
+        /// <summary>
+        /// Displays the menu of character choices. Once a player has selected a character, there will be remarking text and a character type will be set.
+        /// Returns a charType which represents the CharacterType enum of which the player has chosen.
+        /// Provides this charType to the character creation method in the game class
+        /// </summary>
+        /// <returns></returns>
         public CharacterType DisplayCharacterSelect()
         {
             // Establishing the type of character the player chooses. Starts in an uknown state. Changes based upon player selection.
@@ -29,32 +41,32 @@ namespace Dungeon_Battles_of_Winterspell
                 {
                     case 1:
                         charType = CharacterType.Dwarf;
-                        Console.WriteLine("Aw, what an adoarable gnome!");
-                        Console.ReadKey();
-                        Console.WriteLine("Okay, okay calm down, I was only jesting!");
+                        typeEffect.TypedText("Aw, what an adoarable gnome!", true);
+                        Console.ReadLine();
+                        typeEffect.TypedText("Okay, okay calm down, I was only jesting!", true);
                         Console.ReadKey();
                         valid = false;
                         break;
                     case 2:
                         charType = CharacterType.Enchantress;
-                        Console.WriteLine("You posses the Thaumaturgy of the ancient world within you.");
+                        typeEffect.TypedText("You posses the Thaumaturgy of the ancient world within you.", true);
                         Console.ReadKey();
                         valid = false;
                         break;
                     case 3:
                         charType = CharacterType.Woodelf;
-                        Console.WriteLine("From the Halls of Miritar, you venture, where the ruins of Myth Drannor await your return.");
+                        typeEffect.TypedText("From the Halls of Miritar, you venture, where the ruins of Myth Drannor await your return.", true);
                         Console.ReadKey();
                         valid = false;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("Please take this seriously.");
+                        typeEffect.TypedText("Please take this seriously.", true);
                         valid = true;
                         break;
                 }
             }
-            game.CreateCharacter(charType);
+            game.CreateCharacter(charType); // Refers to the game class to take care of some meta details when a player is created.
             return charType;
         }
 
@@ -223,10 +235,15 @@ namespace Dungeon_Battles_of_Winterspell
         public void Map(List<Dungeon> dungeons, string worldName)
         {
             int num = 0;
+            string currDungeon = ""; // For display purposes
             Console.WriteLine();
             Console.Write($"{worldName}   -->  ");
             foreach (Dungeon dungeon in dungeons)
             {
+                if (dungeon.IsCurrent)
+                {
+                    currDungeon = dungeon.DisplayName;
+                }
                 if (num == 3)
                 {
                     Console.Write("\n");
@@ -235,6 +252,7 @@ namespace Dungeon_Battles_of_Winterspell
                 num++;
             }
 
+            typeEffect.TypedText("\nYou have made a discovery! Your next dungeon is revealed before you: " + currDungeon, true);
         }
 
         public void DungeonComplete()

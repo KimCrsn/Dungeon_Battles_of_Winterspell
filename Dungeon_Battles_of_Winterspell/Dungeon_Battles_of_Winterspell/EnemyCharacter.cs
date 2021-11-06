@@ -13,7 +13,6 @@ namespace Dungeon_Battles_of_Winterspell
         HauntingSpirit,
         UndeadWolf,
         DungeonDweller,
-        Unknown
     }
     public class EnemyCharacter : ICharacter
     {
@@ -32,7 +31,34 @@ namespace Dungeon_Battles_of_Winterspell
                 }
             }
         }
-        public EnemyType EnemyType { get; set; } = EnemyType.Unknown;
+
+        // Enemy type is randomized each time a new enemy is created
+        public EnemyType EnemyType
+        {
+            get
+            {
+                EnemyType[] enemies = new EnemyType[7]; // new array to store each enum EnemyType
+                int i = 0;
+                foreach (EnemyType enemy in (EnemyType[])Enum.GetValues(typeof(EnemyType))) // Looping over an enum
+                {
+                    enemies[i] = enemy; // Adding the current enemy loooped into the i index array element
+                    i++;
+                }
+
+                Random rnd = new Random();
+                int rngNum = rnd.Next(0, 8); // Creates a number between 0 and 7 inclusive representing indexes of the arrays.
+                EnemyType enemyType = enemies[rngNum]; // Equates the EnemyType enum to what a random index is the array of options for enemy types.
+                return enemyType;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                string name = EnemyType.ToString().Substring(0,);
+            }
+        }
 
         public string Name
         {
