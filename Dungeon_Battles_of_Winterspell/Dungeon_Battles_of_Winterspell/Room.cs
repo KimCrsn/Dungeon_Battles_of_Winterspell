@@ -48,13 +48,35 @@ namespace Dungeon_Battles_of_Winterspell
             }
         }
 
+        // Method within the class sets this list of a few enemies + player to be in an accurate turn based queue.
+        public Queue<ICharacter> TurnQueue { get; private set; }
+
+        // Randomly generate one enemy type, create a new enemy based on that
+        public EnemyType RandomizeEnemy ()
+        {
+            // This randomizes an enemytype from the list of enemy types
+            EnemyType[] enemies = new EnemyType[7]; // new array to store each enum EnemyType
+            int i = 0;
+            foreach (EnemyType enemy in (EnemyType[])Enum.GetValues(typeof(EnemyType))) // Looping over an enum
+            {
+                enemies[i] = enemy; // Adding the current enemy loooped into the i index array element
+                i++;
+            }
+
+            Random rnd = new Random();
+            int rngNum = rnd.Next(0, 7); // Creates a number between 0 and 7 inclusive representing indexes of the arrays.
+            EnemyType enemyType = enemies[rngNum]; // Equates the EnemyType enum to what a random index is the array of options for enemy types.
+            return enemyType;
+        }
+
 
         /// <summary>
-        /// Returns a list of new EnemyCharacters which are randomized, and the amount of enemies in the list is rng between 1 and 4 inclusive. This will be taken in for queing purposes.
+        /// Returns a queue of new EnemyCharacters which are randomized, and the amount of enemies in the list is rng between 1 and 4 inclusive. This will be taken in for queing purposes.
         /// This should be called once the game state is new room, as enemies must be spawned in it. characters represents enemies spawned and the addition of the player character.
+        /// See method TurnBasedQueue for how the turn queue is returned within this method.
         /// </summary>
         /// <returns></returns>
-        public ICollection<ICharacter> SpawnedEnemies(PlayerCharacter player) // This will only occur when a new room is entered. Taking in player purely for the purpose of passing into next method.
+        public Queue<ICharacter> SpawnedEnemies(PlayerCharacter player) // This will only occur when a new room is entered. Taking in player purely for the purpose of passing into next method.
         {
             List<ICharacter> characters = new List<ICharacter>(); // Empty list to add spawened enemies to.
             Random rnd = new Random();
@@ -64,8 +86,8 @@ namespace Dungeon_Battles_of_Winterspell
                 characters.Add(new EnemyCharacter()); // This enemy should be random
             }
             characters.Add(player); // Throw the player into the list.
-            TurnBasedQueue(characters); // Passing the list of rng enemies into the turn queue.
-            return characters;
+            Queue<ICharacter> turnQueue = TurnBasedQueue(characters); // storing the returned turn based queue into the queue here for easier use of single method.
+            return turnQueue;
         }
 
         /// <summary>
@@ -105,6 +127,7 @@ namespace Dungeon_Battles_of_Winterspell
                 turnQueue.Enqueue(character);
             }
 
+            this.TurnQueue = turnQueue;
             return turnQueue;
         }
     }

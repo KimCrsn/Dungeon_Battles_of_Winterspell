@@ -12,28 +12,47 @@ namespace Dungeon_Battles_of_Winterspell
         Undead,
         HauntingSpirit,
         UndeadWolf,
-        DungeonDweller,
+        DungeonDweller
     }
     public class EnemyCharacter : ICharacter
     {
-        // Swiftness is true for Firespitter and Undeadwolves
-        public bool HasSwiftness
+        public bool IsPlayer
         {
             get
             {
-                if (EnemyType == EnemyType.Firespitter || EnemyType == EnemyType.UndeadWolf)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
         }
+        public virtual int Health { get; set; } = 40;
+
+        // Swiftness is true for Firespitter and Undeadwolves
+        public virtual bool HasSwiftness { get; } = false;
+
+        /// <summary>
+        /// Derived property of the type of attack which is dependent on the enemy type.
+        /// </summary>
+        public AttackType Attack { get; }
+        public string Name { get; }
+
+//        public void method()
+//        {
+//            List<Func<GameEnemy>> enemyCreationFunctions = new List<Func<GameEnemy>>();
+//​
+//            enemyCreationFunctions.Add(() => new Goblin());
+//                        enemyCreationFunctions.Add(() => new Dorkwad());
+//            // ...
+//            ​
+//            int index = myExistingRandomIDefinitelyDidntCreateInThisSameFunction.Next(enemyCreationFunctions.Count);
+//            ​
+//            Func<GameEnemy> creator = enemyCreationFunctions[index];
+//            ​
+//            GameEnemy enemy = creator(); // maybe creator.Invoke()?
+//            ​
+//            return enemy;
+//        }
 
         // Enemy type is randomized each time a new enemy is created
-        public EnemyType EnemyType
+        public EnemyType CharacterType
         {
             get
             {
@@ -46,45 +65,43 @@ namespace Dungeon_Battles_of_Winterspell
                 }
 
                 Random rnd = new Random();
-                int rngNum = rnd.Next(0, 8); // Creates a number between 0 and 7 inclusive representing indexes of the arrays.
+                int rngNum = rnd.Next(0, 7); // Creates a number between 0 and 7 inclusive representing indexes of the arrays.
                 EnemyType enemyType = enemies[rngNum]; // Equates the EnemyType enum to what a random index is the array of options for enemy types.
                 return enemyType;
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                string name = EnemyType.ToString().Substring(0,);
-            }
-        }
 
-        public string Name
-        {
-            get
-            {
-                switch (EnemyType)
-                {
-                    case EnemyType.DungeonDweller:
-                        return "Dungeon Dweller";
-                    case EnemyType.Firespitter:
-                        return "Firespitter";
-                    case EnemyType.Goblin:
-                        return "Goblin";
-                    case EnemyType.HauntingSpirit:
-                        return "Haunting Spirit";
-                    case EnemyType.Troll:
-                        return "Troll";
-                    case EnemyType.Undead:
-                        return "Undead";
-                    case EnemyType.UndeadWolf:
-                        return "Undead Wolf";
-                    default:
-                        return null;
-                }
-            }
-        } // Varies per character type enum
+        // Depending on the name of the enemy, when describing them in the game, it must use either a or an
+        //public string NameDepiction
+        //{
+        //    get
+        //    {
+        //        string name = "";
+        //        if (Name == "Dungeon Dweller"
+        //            || Name == "Firespitter"
+        //            || Name == "Goblin"
+        //            || Name == "Haunting Spirit"
+        //            || Name == "Troll")
+        //        {
+        //            name = "a " + this.Name;
+        //        }
+        //        else if (Name == "Undead" || Name == "Undead Wolf")
+        //        {
+        //            name = "an " + this.Name;
+        //        }
+        //        return name;
+        //    }
+        //} // This is for the inital description of the room
+        //public string NameReference
+        //{
+        //    get
+        //    {
+        //        string name = "the " + this.Name;
+        //        return name;
+        //    }
+        //} // This is for refering to the enemies in combat mode
 
+        //public bool IsSkipped { get; set; } = false;
     }
 }

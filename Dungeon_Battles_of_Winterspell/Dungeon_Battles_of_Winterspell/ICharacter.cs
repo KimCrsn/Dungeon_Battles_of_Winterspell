@@ -9,7 +9,11 @@ namespace Dungeon_Battles_of_Winterspell
     /// </summary>
     public interface ICharacter
     {
+        //public CharacterType CharacterType { get; }
+        public bool IsPlayer { get; }
         public bool HasSwiftness { get; }
         public string Name { get; }
+        //public string NameDepiction { get; }
+        //public string NameReference { get; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Dungeon_Battles_of_Winterspell.Weapons;
 using DungeonBattles_Of_Winterspell.DisplayText;
 
 namespace Dungeon_Battles_of_Winterspell
@@ -45,11 +46,17 @@ namespace Dungeon_Battles_of_Winterspell
         
         public Dungeon CurrentDungeon { get; set; }
 
+        Queue<ICharacter> TurnOrder { get; set; }
+
+        public ICharacter CurrentCombatCharacter { get; private set; }
+
         private PlayerCharacter player = new PlayerCharacter();
-        private Weapon weapon = new Weapon();
+        private IPlayerWeapon weapon;
+        private WeaponProvider weaponProvider = new WeaponProvider();
         private Dungeon dungeon = new Dungeon();
         private World newWorld = new World();
         private Room room = new Room();
+        private CombatSystem combatSystem = new CombatSystem();
 
         /// <summary>
         /// Sets the local class method Dungeons equal to a list of generated dungeons. This is called once at the beginning of the game.
@@ -60,6 +67,8 @@ namespace Dungeon_Battles_of_Winterspell
             this.Dungeons = dungeon.GenerateDungeonsManually();
         }
 
+        public PlayerCharacter PlayerCharacter { get; set; }
+
         /// <summary>
         /// The CharacterType is retrieved from UI when the UI calls this method. It passes it in the current character type. The method then sets the local field player to the new character which
         /// the property of CharacterType has been set. Many derrived properties can be set with the this charType.
@@ -68,6 +77,7 @@ namespace Dungeon_Battles_of_Winterspell
         public void CreateCharacter(CharacterType charType)
         {
             player = new PlayerCharacter(charType);
+            PlayerCharacter = player;
 
             // Setting some properties for the new character. Would set properties within the class to defaults, but that involves setting them to readonlys.
             player.CheckSwiftness();
@@ -75,7 +85,7 @@ namespace Dungeon_Battles_of_Winterspell
             player.EstablishAllTraits();
 
             // Generate a list of weapon choices by taking in which character was chosen
-            weapon.GetWeaponChoices(charType);
+            weaponProvider.GetWeaponChoices(charType);
 
             bool leaveMenu = false;
             while (!leaveMenu)
@@ -110,6 +120,15 @@ namespace Dungeon_Battles_of_Winterspell
                     break;
                 case GameState.NewRoom:
                     StateNewRoom();
+                    break;
+                case GameState.Combat:
+                    StateCombat();
+                    break;
+                case GameState.PlayerTurn:
+                    StatePlayerTurn();
+                    break;
+                case GameState.EnemyTurn:
+                    StatePlayerTurn();
                     break;
             }
         }
@@ -147,9 +166,58 @@ namespace Dungeon_Battles_of_Winterspell
             else
             {
                 dungeon.RoomsRemaining -= 1; // This changes the current count of rooms remaining on the dungoen
-                ICollection<ICharacter> turnQueue = room.SpawnedEnemies(player); // Gets the list of enemies and player in a turn queue.
-                storyText.NewRoom(turnQueue);
+                Queue<ICharacter> turnQueue = room.SpawnedEnemies(player); // Gets the list of enemies and player in a turn queue.
+                this.TurnOrder = turnQueue;
+                storyText.NewRoomDepiction(turnQueue);
+                CheckGameStates(GameState.Combat);
             }
         }
+
+        public void StateCombat()
+        {
+            // begin fight text
+
+            // Who's turn is it?
+            foreach (ICharacter character in TurnOrder)  // property contains the current turn queue
+            {
+                this.CurrentCombatCharacter = character;
+                if (character.IsPlayer) // if the current ICharacter in the list is the player
+                {
+                    CheckGameStates(GameState.PlayerTurn);
+                }
+                else
+                {
+                    CheckGameStates(GameState.EnemyTurn);
+                }
+            }
+        }
+
+            // don't forget to create readonly or established enemy health and weapon and stuff
+            // create attack class and take in player which should have weapon equipped property
+            // get the turn queue, if it is enemy first says "the {} has used his club to perform a gorund smack for __ damage
+            // maybe a loading calculation or something lol. It effects the players health and a health check is performed fro death on player
+            // next turn... when it is players, present user with an attack menu. different attacks, different abilities, readding manual contaisn info
+            // also have a 2 phase turn for player and if they drink potion, ptoions -= 1 and health += 25
+            // player chooses from turn queue, after player attacks enemy, the dead enemy checkwer will look at if it is dead, if so, remove from queue
+            // once queue.count == 0, combat phase complete and switch to loot phase. player may find 1-3 rng items around the room. They might be
+            //hp potions or gold or cool pieces of lore.
+            // the player can of course use the hp filler here too
+            //also dungeon -= 1 room and room cleared
+            // new room and text for it do this until rooms remainging ii 0 at which point offer new dungeon.
+        
+        public void StatePlayerTurn()
+        {
+            // present player with options of attack, potion or flee
+            // take in user input adn based on which attack do player.attack1 or 2(pass in their target)
+            //once it goes there it will build the attack and pass the info on to the attack method in attack calss
+        }
+
+        //public void StateEnemyTurn()
+        //{
+        //    // text to represent attack preface
+        //    combatSystem.InflictDamage(player, CurrentCombatCharacter); // No targeting required as there is only one player
+
+        //    //player.IsDeadCheck()
+        //}
     }
 }

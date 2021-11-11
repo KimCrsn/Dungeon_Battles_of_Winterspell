@@ -10,6 +10,13 @@ namespace Dungeon_Battles_of_Winterspell
         Enchantress,
         Dwarf,
         Woodelf,
+        Goblin,
+        Troll,
+        Firespitter,
+        Undead,
+        HauntingSpirit,
+        UndeadWolf,
+        DungeonDweller,
         Uknown
     }
 
@@ -31,6 +38,14 @@ namespace Dungeon_Battles_of_Winterspell
         {
 
         }
+
+        public bool IsPlayer
+        {
+            get
+            {
+                return true;
+            }
+        }
         public string Name 
         {
             get
@@ -48,7 +63,11 @@ namespace Dungeon_Battles_of_Winterspell
                 }
             }
         } // Varies per character type enum
-        // Current and updating health of character. The defualts vary depending on the character type.
+          // Current and updating health of character. The defualts vary depending on the character type.
+
+        //public EnemyType EnemyType { get; } = EnemyType.NotEnemy; // Player is not an enemy. THIS IS REQUIRED FOR THE ATTACK IN ENEMY CLASS ICHARACTER CONTRACT
+        public IPlayerWeapon Weapon { get; set; }
+        
         public int Health { get; private set; } = 100;
 
         public void EstablishAllTraits()
@@ -98,12 +117,14 @@ namespace Dungeon_Battles_of_Winterspell
                 HasSwiftness = false;
             }
         }
+        public string NameDepiction { get; } // No need to set this, just for ICharacter purposes
+        public string NameReference { get; } // No need to set this, just for ICharacter purposes
 
         // Readonly so it can be passed in when the character is created using user input.
         public CharacterType PlayerType { get; }
 
         // What is the weapon object of the player?
-        public Weapon Weapon { get; set; }
+        public IWeapon WeaponEquipped { get; set; }
 
         public int PotionCount { get; set; } = 1; // By default a player has 1 potion. A player can have up to 3 potions.
 
@@ -168,6 +189,7 @@ namespace Dungeon_Battles_of_Winterspell
             Dexterity = dexterity;
         }
 
+
         /// <summary>
         /// When a character takes damage from another character, the health is checked to verify if dead is true or false, and also sets the current health.
         /// </summary>
@@ -182,7 +204,7 @@ namespace Dungeon_Battles_of_Winterspell
         /// Checks that the current health of the player when damage is taken, is not at or below 0. If it is not, return false. If yes, return true.
         /// </summary>
         /// <param name="currentHealth"></param>
-        public bool IsDead(int currentHealth)
+        public bool IsDeadCheck(int currentHealth)
         {
             if (currentHealth <= 0)
             {
@@ -195,8 +217,6 @@ namespace Dungeon_Battles_of_Winterspell
                 return false;
             }
         }
-
-
     }
 }
 

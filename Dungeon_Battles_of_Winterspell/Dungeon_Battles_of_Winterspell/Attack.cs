@@ -1,75 +1,107 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Dungeon_Battles_of_Winterspell
 {
-    public enum AttackType
+    public enum AttackType // There are so many b/c this enum will be shared by the ICharacter interface
     {
-        SwordSwing
-    }
+        // Dwarf
+        StrikeOfThunderAndSteele, // hammer
+        WoundingSkullCruncher, // hammer
+        MightyCleave, // axe
+        AgedSlicedServed, // axe
+        DoubleSwing, // short sword
+        GutWrencher,
 
-    /// <summary>
-    /// Manages the details of the attack damage output and types of chosen attacks.
-    /// </summary>
+        // Enchantress
+        DarkCharm, // want
+        AncientIncantation, // want
+        BrewedStorm, // staff
+        FireBeacon, // staff
+        WindOfFurry, // daggars
+        DualStab, // daggars
+
+        // Woodelf
+        PiercingArrow,
+        FletchersFolley,
+        SnipersMark,
+        MajesticVolley,
+        ElegantDivide,
+        TeachingsOfTheElders,
+
+        // Enemy
+        ClubSmack,
+        MightyChomp,
+        MoltenBreath,
+        SwordSwing,
+        Spooky,
+        UnearthlyHowl,
+        PowerfulFist,
+
+        Unknown
+    }
     public class Attack
     {
         /// <summary>
-        /// Constructor takes in the type of attack being made, and based on it, the damage will be adjusted.
+        /// This constructor's purpose is to be able to create a new attack in full minus the derived functionality dependent on these properties. In each Weapon inherited class which is a specific weapon name/type.
+        /// When the methods of Attack1 and Attack2 are used, they create a brand new attack each time, and create it based on the expected attack which is always going to be the same two per each weapon.
         /// </summary>
         /// <param name="attackType"></param>
-        public Attack ()
-        {
-
-        }
-
-        /// <summary>
-        /// Takes in no arguments, returns an array with integers 1 through 25. Range represents possible damage.
-        /// </summary>
-        /// <returns></returns>
-        private int[] DamageRange()
-        {
-            int[] range = new int[26];
-            int num = 1;
-            for (int i = 0; i < 26; i++)
-            {
-                range[i] = num;
-                num++;
-            }
-            return range;
-        }
-
-        /// <summary>
-        ///  Each Character Player gets two different attack types, they will get to choose between attack1 or attack2 during their turn. 
-        ///  The returned Dictionary stores the attack type and the amount of damage (as a range). 
-        /// </summary>
-        /// <param name="attackType"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="maxDamage"></param>
         /// <param name="damageRange"></param>
-        /// <returns></returns>
-        public Dictionary<AttackType, IEquatable<Range>> Attack1 (AttackType attackType, IEquatable<Range> damageRange)
+        public Attack (AttackType attackType, string name, string description, int maxDamage, Range damageRange, int chanceToHit, bool isAOE)
         {
-            Dictionary<AttackType, IEquatable<Range>> attack = new Dictionary<AttackType, IEquatable<Range>>();
-            int[] range = DamageRange(); // Array ints 1 through 25.
-
-            // Have a dictionary which contains the attack name/type which will determine damage range. Take in that range and output it into the dictionary.
-            // If the attack is this, make it have this range.
-            if (attack.ContainsKey(AttackType.SwordSwing))
-            {
-                //damageRange = Range.EndAt(5);
-                int[] currRange = range[0..2];
-            }
-            return attack;
+            this.AttackType = attackType;
+            this.Name = name;
+            this.Description = description;
+            this.MaxDamage = maxDamage;
+            this.DamageRange = damageRange;
+            this.ChanceToHit = chanceToHit / 100; // Will be used as a percentage
         }
-        public Dictionary<AttackType, int> Attack2 { get; set; }
 
-        /// <summary>
-        /// This method manages the 'attack', it adjusts damage based on the attack type.
-        /// </summary>
-        /// <returns></returns>
-        //public int InflictDamage()
+        public int ChanceToHit { get; }
+        public AttackType AttackType { get; }
+
+        public string Name { get; }
+        public string Description { get; }
+
+        public int MaxDamage { get; } // For purposes of crit
+
+        public float CritChance { get; } // This will be if the attack lands on max damage
+       
+        //public bool AttackHit
         //{
-        //    if (Attack)
+        //    get
+        //    {
+                
+        //    }
+        //}
+        //public bool Critical
+        //{
+        //    get
+        //    {
+        //        if (AttackHit && DamageInflicted == MaxDamage)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
+
+        //public bool AttackHit { get; private set; }
+        public int DamageInflicted { get; private set; }
+
+        public Range DamageRange { get; }
+
+        //public bool PerformAttack()
+        //{
+
         //}
 
     }

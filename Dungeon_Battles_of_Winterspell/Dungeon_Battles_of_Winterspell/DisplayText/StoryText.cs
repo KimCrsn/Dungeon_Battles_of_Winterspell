@@ -79,18 +79,49 @@ namespace DungeonBattles_Of_Winterspell.DisplayText
             
         }
 
-        public void NewRoom(ICollection<ICharacter> turnQueue)
+        /// <summary>
+        /// Uses the current turn queue for the current room and establishes text based on what is available from list. It takes in the turn queue 
+        /// provided from the game class. It explains what the player sees in the room.
+        /// </summary>
+        /// <param name="turnQueue"></param>
+        public void NewRoomDepiction(Queue<ICharacter> turnQueue)
         {
             TypeEffect typingOutText = new TypeEffect();
             Console.Clear();
             // make how you entered a new room rng between different options.
-            typingOutText.TypedText($"You have stumbled into a new room where you have discovered a ", true);
+            int queueCount = turnQueue.Count - 1; // How many total enemies in the queue
+            int num = 1; // A counter to keep track of last enemy for purposes of displaying better
+            typingOutText.TypedText($"You have stumbled into a new room where you have discovered", true);
             foreach(ICharacter character in turnQueue)
             {
-                // check that there is still a next character otherwise must not have an a at the end.
-                typingOutText.TypedText($"{character.Name}, a", true);
+                if (character.Name == "Dwarf"
+                 || character.Name == "Enchantress"
+                 || character.Name == "Woodelf") // If the current iteration is on the player (don't need to depict them)
+                {
+                    // Do nothing
+                }
+                else if (num == queueCount && queueCount > 1) // If this is the last enemy needing described but not if this is the only enemy described
+                {
+                    typingOutText.TypedText($" and {character/*.NameDepiction*/}...", true);
+                }
+                else
+                {
+                    if (queueCount == 1)
+                    {
+                        typingOutText.TypedText($" {character/*.NameDepiction*/}... ", true);
+                    }
+                    else
+                    {
+                        // check that there is still a next character otherwise must not have an a at the end.
+                        typingOutText.TypedText($" {character/*.NameDepiction*/}, ", true);
+                        num++;
+                    }
+                }
             }
-            typingOutText.TypedText("Combat begins...", true);
+            typingOutText.TypedText("You breath the breath of courage, weapon tightly gripped....", true);
+            Console.ReadLine();
+            typingOutText.TypedText("Combat begins.", true);
+            Console.ReadKey();
         }
 
     }

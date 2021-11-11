@@ -8,7 +8,7 @@ namespace Dungeon_Battles_of_Winterspell
     public class UserInterface
     {
         private Game game = new Game();
-        private Weapon weapon = new Weapon(WeaponType.Uknown);
+        private IPlayerWeapon weapon;
         TypeEffect typeEffect = new TypeEffect();
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Dungeon_Battles_of_Winterspell
             return charType;
         }
 
-        public Weapon DisplayWeaponsAndSelect(Dictionary<int, Weapon> weapons)
+        public IPlayerWeapon DisplayWeaponsAndSelect(Dictionary<int, IPlayerWeapon> weapons)
         {
             Console.Clear();
             // A while loop to continue redisplaying weapon options and the request of a choice if the user would make an incorrect int.
@@ -78,17 +78,17 @@ namespace Dungeon_Battles_of_Winterspell
             while (valid)
             {
                 Console.WriteLine($"    Choose your weapon");
-            foreach(KeyValuePair<int, Weapon> weapon in weapons)
+            foreach(KeyValuePair<int, IPlayerWeapon> weapon in weapons)
             {
                 // weapon.Key represents and int 1 - 3 for the value of player selection.
-                Console.WriteLine($"    {weapon.Key})   {weapon.Value}");
+                Console.WriteLine($"    {weapon.Key})   {weapon.Value.Name}");
             }
                 int userInput = CLIHelper.GetInteger($"    Your weapon sire:  ");
                 switch (userInput)
                 {
                     // Each weapons[i], i represents the key to correspond with the int input. That equates the local field weapon variable to become the Weapon value associated with that key.
                     case 1:
-                        weapon = weapons[1]; // Same as Weapon weapon = new Weapon(); weapon is now = to the user selected weapon from the dictionary.
+                        weapon = weapons[1]; // Same as IWeapon weapon = new Weapon(); weapon is now = to the user selected weapon from the dictionary.
                         valid = false;
                         break;
                     case 2:
@@ -106,7 +106,12 @@ namespace Dungeon_Battles_of_Winterspell
                         break;
                 }
             }
-            Console.WriteLine("An ardent choice!");
+            Console.WriteLine($"The {weapon.Name}, an ardent choice!");
+            Console.ReadKey();
+            // The game class has a public field of player. Game class is the only class allowed to instantiate the player. A property of PlayerCharacter is equated to that same player.
+            // This weapon the player has chosen is an IWeapon which is a property to be set on the player character. This next line sets the current and only player character's weapon to be this weapon selected.
+            game.PlayerCharacter.Weapon = weapon; 
+
             // The player has made their choice.
             return weapon;
         }
@@ -251,8 +256,9 @@ namespace Dungeon_Battles_of_Winterspell
                 Console.Write($"{dungeon}...  ");
                 num++;
             }
-
+            Console.ReadLine();
             typeEffect.TypedText("\nYou have made a discovery! Your next dungeon is revealed before you: " + currDungeon, true);
+            Console.ReadLine();
         }
 
         public void DungeonComplete()
