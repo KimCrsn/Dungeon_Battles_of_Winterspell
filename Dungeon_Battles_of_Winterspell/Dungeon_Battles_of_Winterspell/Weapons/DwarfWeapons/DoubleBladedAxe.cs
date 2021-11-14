@@ -22,7 +22,22 @@ namespace Dungeon_Battles_of_Winterspell.Weapons
             }
         }
 
-        public Attack BuildAttack1(EnemyCharacter targetEnemy)
+        public string Attack1
+        {
+            get
+            {
+                return "Mighty Cleave";
+            }
+        }
+        public string Attack2
+        {
+            get
+            {
+                return "Aged, Sliced and Served";
+            }
+        }
+
+        public Attack BuildAttack1(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.MightyCleave,
@@ -31,7 +46,7 @@ namespace Dungeon_Battles_of_Winterspell.Weapons
                 12, 8..12, 80, true);
             return attack; // Based on info passed in, the attack class should calculate the damage total and such. Crit will occur if the attack hits and the dmg is relavant.
         }
-        public Attack BuildAttack2(EnemyCharacter targetEnemy)
+        public Attack BuildAttack2(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.AgedSlicedServed,

@@ -6,8 +6,8 @@ namespace Dungeon_Battles_of_Winterspell
     {
         static void Main(string[] args)
         {
-            UserInterface UI = new UserInterface();
-            UI.BeginGame();
+            Game game = new Game();
+            game.BeginGame();
         }
     }
 }

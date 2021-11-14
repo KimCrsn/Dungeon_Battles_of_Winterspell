@@ -40,23 +40,46 @@ namespace Dungeon_Battles_of_Winterspell
     /// </summary>
     public class Game
     {
+
+        /// <summary>
+        /// The game begins! Displays the first story texts and then the character selection screen.
+        /// </summary>
+        public void BeginGame()
+        {
+            StoryText storyText = new StoryText();
+            UserInterface ui = new UserInterface();
+            //storyText.LoadingScreen();
+            //bool playerWillFight = storyText.OpeningStoryText();
+            CharacterType charType = ui.DisplayCharacterSelect();
+            CreateCharacter(charType);
+        }
+
         public GameState CurrentGameState { get; private set; }
 
         public List<Dungeon> Dungeons { get; private set; }
         
         public Dungeon CurrentDungeon { get; set; }
 
-        Queue<ICharacter> TurnOrder { get; set; }
+        Queue<ICharacter> TurnQueue { get; set; }
 
         public ICharacter CurrentCombatCharacter { get; private set; }
 
+        public IPlayerWeapon Weapon
+        {
+            get
+            {
+                IPlayerWeapon weapon;
+                weapon = PlayerCharacter.Weapon;
+                return weapon;
+            }
+        }
+
         private PlayerCharacter player = new PlayerCharacter();
-        private IPlayerWeapon weapon;
         private WeaponProvider weaponProvider = new WeaponProvider();
         private Dungeon dungeon = new Dungeon();
-        private World newWorld = new World();
+        private World World = new World();
         private Room room = new Room();
-        private CombatSystem combatSystem = new CombatSystem();
+
 
         /// <summary>
         /// Sets the local class method Dungeons equal to a list of generated dungeons. This is called once at the beginning of the game.
@@ -76,26 +99,29 @@ namespace Dungeon_Battles_of_Winterspell
         /// <param name="charType"></param>
         public void CreateCharacter(CharacterType charType)
         {
+            UserInterface ui = new UserInterface();
             player = new PlayerCharacter(charType);
             PlayerCharacter = player;
+
+            // Generate a list of weapon choices by taking in which character was chosen
+            IPlayerWeapon[] weaponArr = weaponProvider.GetWeaponChoices(charType);
+            IPlayerWeapon Weapon = ui.DisplayWeaponsAndSelect(weaponArr); // Equates the current field weapon (IPlayerWeapon to the weapon returned, the player's choice).
+            // The game class has a public field of player. Game class is the only class allowed to instantiate the player. A property of PlayerCharacter is equated to that same player.
+            // This weapon the player has chosen is an IPlayerWeapon which is a property to be set on the player character. This next line sets the current and only player character's weapon to be this weapon selected.
+            PlayerCharacter.Weapon = Weapon;
 
             // Setting some properties for the new character. Would set properties within the class to defaults, but that involves setting them to readonlys.
             player.CheckSwiftness();
             player.EstablishHealth();
             player.EstablishAllTraits();
 
-            // Generate a list of weapon choices by taking in which character was chosen
-            weaponProvider.GetWeaponChoices(charType);
 
             bool leaveMenu = false;
             while (!leaveMenu)
             {
-                UserInterface ui = new UserInterface();
-
                 leaveMenu = ui.AllocateAttributes(player);
                 if (leaveMenu)
                 {
-                    // Begin 
                     BeginJourney();
                 }
             }
@@ -115,7 +141,7 @@ namespace Dungeon_Battles_of_Winterspell
             switch (gameState)
             {
                 case GameState.NewDungeon:
-                    StateNewDungeon(); // 
+                    StateNewDungeon();
                     CheckGameStates(GameState.NewRoom);
                     break;
                 case GameState.NewRoom:
@@ -134,18 +160,16 @@ namespace Dungeon_Battles_of_Winterspell
         }
 
 
-
-
         /// <summary>
         /// Handles the process for checking which is the current dungeon and reveals its name accordingly. It calls to check state again, setting the game state to new room.
         /// </summary>
         public void StateNewDungeon()
         {
             UserInterface ui = new UserInterface();
-            // set the next dungeon to current. This line allows for whichever is the current dungeon, for this  property to now represent that dungeon.
-            this.CurrentDungeon = dungeon.CheckCurrentDungeon(Dungeons); // This calls the method which will allow for dungeon class to perform functionality of checking the dungeon states. Gets the proeprty of dungeons.
-            // Calls to the UI to display the dungeons
-            ui.Map(Dungeons, newWorld.ToString());
+            // Returns the current dungeon
+            this.CurrentDungeon = dungeon.CheckCurrentDungeon(Dungeons); 
+            // Calls to the UI to display the dungeons as a map
+            ui.Map(Dungeons, World.ToString());
             CheckGameStates(GameState.NewRoom);
             Console.ReadKey();
         }
@@ -161,13 +185,14 @@ namespace Dungeon_Battles_of_Winterspell
             {
                 ui.DungeonComplete();
                 // set dungeon to complete how to find specific dungeon we are on?
-                dungeon.Completed = true;
+                dungeon.Completed = true; // not necessary
+                CheckGameStates(GameState.NewDungeon); // Enter the next dungeon.
             }
             else
             {
                 dungeon.RoomsRemaining -= 1; // This changes the current count of rooms remaining on the dungoen
-                Queue<ICharacter> turnQueue = room.SpawnedEnemies(player); // Gets the list of enemies and player in a turn queue.
-                this.TurnOrder = turnQueue;
+                Queue<ICharacter> turnQueue = room.SpawnEnemies(player); // Gets the list of enemies and player in a turn queue.
+                this.TurnQueue = turnQueue;
                 storyText.NewRoomDepiction(turnQueue);
                 CheckGameStates(GameState.Combat);
             }
@@ -175,10 +200,13 @@ namespace Dungeon_Battles_of_Winterspell
 
         public void StateCombat()
         {
+            UserInterface ui = new UserInterface();
+            ui.DisplayCombatMenu(TurnQueue, player); // Displays the current state of the game info. Requires the player to get some information from it as an IPlayerCharacter not just ICharacter.
+
             // begin fight text
 
             // Who's turn is it?
-            foreach (ICharacter character in TurnOrder)  // property contains the current turn queue
+            foreach (ICharacter character in TurnQueue)  // property contains the current turn queue
             {
                 this.CurrentCombatCharacter = character;
                 if (character.IsPlayer) // if the current ICharacter in the list is the player
@@ -212,12 +240,6 @@ namespace Dungeon_Battles_of_Winterspell
             //once it goes there it will build the attack and pass the info on to the attack method in attack calss
         }
 
-        //public void StateEnemyTurn()
-        //{
-        //    // text to represent attack preface
-        //    combatSystem.InflictDamage(player, CurrentCombatCharacter); // No targeting required as there is only one player
 
-        //    //player.IsDeadCheck()
-        //}
     }
 }

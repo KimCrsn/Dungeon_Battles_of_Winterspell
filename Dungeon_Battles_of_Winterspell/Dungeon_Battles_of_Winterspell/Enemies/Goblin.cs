@@ -4,20 +4,30 @@ using System.Text;
 
 namespace Dungeon_Battles_of_Winterspell.Enemies
 {
-    public class Goblin : ICharacter
+    public class Goblin : ICharacter, IEnemy
     {
-        public CharacterType CharacterType
-        {
-            get
-            {
-               return CharacterType.Goblin;
-            }
-        }
+
         public bool IsPlayer
         {
             get
             {
                 return false;
+            }
+        }
+        public int Health { get; set; } = 30;
+        public AttackType AttackType
+        {
+            get
+            {
+                return AttackType.ClubSmack;
+            }
+        }
+
+        public EnemyType EnemyType
+        {
+            get
+            {
+                return EnemyType.Goblin;
             }
         }
         public bool HasSwiftness
@@ -34,19 +44,9 @@ namespace Dungeon_Battles_of_Winterspell.Enemies
                 return "Goblin";
             }
         }
-        public string NameDepiction
+        public override string ToString()
         {
-            get
-            {
-                return "a Goblin";
-            }
-        }
-        public string NameReference
-        {
-            get
-            {
-                return "the Goblin";
-            }
+            return Name;
         }
     }
 }

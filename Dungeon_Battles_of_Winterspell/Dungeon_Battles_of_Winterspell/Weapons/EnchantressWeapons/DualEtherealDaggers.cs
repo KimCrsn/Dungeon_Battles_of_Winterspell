@@ -22,7 +22,21 @@ namespace Dungeon_Battles_of_Winterspell.Weapons.EnchantressWeapons
             }
         }
 
-        public Attack BuildAttack1(EnemyCharacter targetEnemy)
+        public string Attack1
+        {
+            get
+            {
+                return "Wind of Furry";
+            }
+        }
+        public string Attack2
+        {
+            get
+            {
+                return "Dual Stab";
+            }
+        }
+        public Attack BuildAttack1(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.WindOfFurry,
@@ -31,7 +45,7 @@ namespace Dungeon_Battles_of_Winterspell.Weapons.EnchantressWeapons
                 100, 99..100, 100, false);
             return attack; // Based on info passed in, the attack class should calculate the damage total and such. Crit will occur if the attack hits and the dmg is relavant.
         }
-        public Attack BuildAttack2(EnemyCharacter targetEnemy)
+        public Attack BuildAttack2(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.DualStab,

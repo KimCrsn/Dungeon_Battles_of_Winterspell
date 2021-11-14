@@ -15,10 +15,9 @@ namespace Dungeon_Battles_of_Winterspell.Weapons
         /// </summary>
         /// <param name="charType"></param>
         /// <returns></returns>
-        public void GetWeaponChoices(CharacterType charType)
+        public IPlayerWeapon[] GetWeaponChoices(CharacterType charType) // must pass in player for next method.
         {
             List<IPlayerWeapon> weaponList = new List<IPlayerWeapon>();
-            Dictionary<int, IPlayerWeapon> weaponChoices = new Dictionary<int, IPlayerWeapon>();
             switch (charType)
             {
                 case CharacterType.Dwarf:
@@ -37,16 +36,9 @@ namespace Dungeon_Battles_of_Winterspell.Weapons
                     weaponList.Add(new ElvenLongsword());
                     break;
             }
-            // Int included in the dictionary to represent the number to select. Setting the property of WeaponChoices = to a dictionary of the choices for the specific character and int values for idents.
-            int i = 1;
-            foreach (IPlayerWeapon weapon in weaponList)
-            {
-                weaponChoices[i] = weapon;
-                i++;
-            }
             // Display the weapon choices
-            UserInterface ui = new UserInterface();
-            ui.DisplayWeaponsAndSelect(weaponChoices); // Takes in a dictionary in order to display them along with their key.
+            IPlayerWeapon[] weaponArr = weaponList.ToArray();
+            return weaponArr;
         }
     }
 }

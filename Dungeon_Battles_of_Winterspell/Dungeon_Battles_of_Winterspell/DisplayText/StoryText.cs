@@ -89,40 +89,38 @@ namespace DungeonBattles_Of_Winterspell.DisplayText
             TypeEffect typingOutText = new TypeEffect();
             Console.Clear();
             // make how you entered a new room rng between different options.
-            int queueCount = turnQueue.Count - 1; // How many total enemies in the queue
+            int enemiesInQueue = turnQueue.Count - 1; // How many total enemies in the queue
             int num = 1; // A counter to keep track of last enemy for purposes of displaying better
-            typingOutText.TypedText($"You have stumbled into a new room where you have discovered", true);
+            // Perhaps add here later an rng statement about the foes.
+            typingOutText.TypedText($"You have stumbled into a new room where you now faces the foes stood before you. Here in this room there is a ", true);
             foreach(ICharacter character in turnQueue)
             {
-                if (character.Name == "Dwarf"
-                 || character.Name == "Enchantress"
-                 || character.Name == "Woodelf") // If the current iteration is on the player (don't need to depict them)
+                if (character.IsPlayer) // If the current iteration is on the player (don't need to depict them)
                 {
                     // Do nothing
                 }
-                else if (num == queueCount && queueCount > 1) // If this is the last enemy needing described but not if this is the only enemy described
+                else if (num == enemiesInQueue && enemiesInQueue > 1) // If this is the last enemy needing described but not if this is the only enemy described
                 {
-                    typingOutText.TypedText($" and {character/*.NameDepiction*/}...", true);
+                    typingOutText.TypedText($"and {character/*.NameDepiction*/}...", true);
+                }
+                else if (enemiesInQueue == 1)
+                {
+                    typingOutText.TypedText($"{character/*.NameDepiction*/}...", true);
                 }
                 else
                 {
-                    if (queueCount == 1)
-                    {
-                        typingOutText.TypedText($" {character/*.NameDepiction*/}... ", true);
-                    }
-                    else
-                    {
-                        // check that there is still a next character otherwise must not have an a at the end.
-                        typingOutText.TypedText($" {character/*.NameDepiction*/}, ", true);
-                        num++;
-                    }
+                    // check that there is still a next character otherwise must not have an a at the end.
+                    typingOutText.TypedText($"{character/*.NameDepiction*/}, ", true);
+                    num++;
                 }
-            }
-            typingOutText.TypedText("You breath the breath of courage, weapon tightly gripped....", true);
-            Console.ReadLine();
-            typingOutText.TypedText("Combat begins.", true);
-            Console.ReadKey();
+                }
+                typingOutText.TypedText("You breath the breath of courage, weapon tightly gripped....", true);
+                Console.ReadLine();
+                typingOutText.TypedText("Combat begins.", true);
+                Console.ReadKey();
         }
+            
+        
 
     }
 }

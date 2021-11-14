@@ -4,20 +4,29 @@ using System.Text;
 
 namespace Dungeon_Battles_of_Winterspell.Enemies
 {
-    public class Firespitter : EnemyCharacter, ICharacter
+    public class Firespitter : ICharacter, IEnemy
     {
-        public EnemyType EnemyType
-        {
-            get
-            {
-                return EnemyType.Troll;
-            }
-        }
         public bool IsPlayer
         {
             get
             {
                 return false;
+            }
+        }
+        public int Health { get; set; } = 40;
+        public AttackType AttackType
+        {
+            get
+            {
+                return AttackType.LavaSpit;
+            }
+        }
+
+        public EnemyType EnemyType
+        {
+            get
+            {
+                return EnemyType.Firespitter;
             }
         }
         public bool HasSwiftness
@@ -34,19 +43,9 @@ namespace Dungeon_Battles_of_Winterspell.Enemies
                 return "Firespitter";
             }
         }
-        public string NameDepiction
+        public override string ToString()
         {
-            get
-            {
-                return "a Firespitter";
-            }
-        }
-        public string NameReference
-        {
-            get
-            {
-                return "the Firespitter";
-            }
+            return Name;
         }
     }
 }

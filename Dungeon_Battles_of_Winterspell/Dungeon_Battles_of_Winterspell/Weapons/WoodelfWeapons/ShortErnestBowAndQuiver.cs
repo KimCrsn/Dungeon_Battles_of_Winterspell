@@ -28,7 +28,22 @@ namespace Dungeon_Battles_of_Winterspell.Weapons.WoodelfWeapons
                 return "Short Ernest Bow and Quiver";
             }
         }
-        public Attack BuildAttack1(EnemyCharacter targetEnemy)
+
+        public string Attack1
+        {
+            get
+            {
+                return "Piercing Arrow";
+            }
+        }
+        public string Attack2
+        {
+            get
+            {
+                return "Fletchers Folley";
+            }
+        }
+        public Attack BuildAttack1(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.PiercingArrow,
@@ -37,7 +52,7 @@ namespace Dungeon_Battles_of_Winterspell.Weapons.WoodelfWeapons
                 11, 7..11, 68, false);
             return attack; // Based on info passed in, the attack class should calculate the damage total and such. Crit will occur if the attack hits and the dmg is relavant.
         }
-        public Attack BuildAttack2(EnemyCharacter targetEnemy)
+        public Attack BuildAttack2(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.FletchersFolley,

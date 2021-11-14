@@ -21,7 +21,21 @@ namespace Dungeon_Battles_of_Winterspell
                 return "Steel Split Hammer";
             }
         }
-        public Attack BuildAttack1 (EnemyCharacter targetEnemy)
+        public string Attack1
+        {
+            get
+            {
+                return "Strike of Thunder and Steele";
+            }
+        }
+        public string Attack2
+        {
+            get
+            {
+                return "Wounding Skull Cruncher";
+            }
+        }
+        public Attack BuildAttack1 (IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.StrikeOfThunderAndSteele,
@@ -31,7 +45,7 @@ namespace Dungeon_Battles_of_Winterspell
                 12, 8..12, 80, true);
             return attack; // Based on info passed in, the attack class should calculate the damage total and such. Crit will occur if the attack hits and the dmg is relavant.
         }
-        public Attack BuildAttack2(EnemyCharacter targetEnemy)
+        public Attack BuildAttack2(IEnmey targetEnemy)
         {
             // attack type is strike of thunder and steel
             Attack attack = new Attack(AttackType.WoundingSkullCruncher,

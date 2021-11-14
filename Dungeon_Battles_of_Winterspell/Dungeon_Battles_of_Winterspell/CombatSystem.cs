@@ -60,7 +60,7 @@ namespace Dungeon_Battles_of_Winterspell
 
             // Have a dictionary which contains the attack name/type which will determine damage range. Take in that range and output it into the dictionary.
             // If the attack is this, make it have this range.
-            if (attack.ContainsKey(AttackType.SwordSwing))
+            if (attack.ContainsKey(AttackType.SnipersMark))
             {
                 //damageRange = Range.EndAt(5);
                 int[] currRange = range[0..2];

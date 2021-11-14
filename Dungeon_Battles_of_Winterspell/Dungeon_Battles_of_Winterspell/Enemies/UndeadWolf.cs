@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dungeon_Battles_of_Winterspell.Enemies
 {
-    public class Troll : ICharacter, IEnemy
+    public class UndeadWolf : ICharacter, IEnemy
     {
         public bool IsPlayer
         {
@@ -13,12 +13,12 @@ namespace Dungeon_Battles_of_Winterspell.Enemies
                 return false;
             }
         }
-        public int Health { get; set; } = 65;
+        public int Health { get; set; } = 100;
         public AttackType AttackType
         {
             get
             {
-                return AttackType.MightyChomp;
+                return AttackType.UnearthlyHowl;
             }
         }
 
@@ -26,21 +26,21 @@ namespace Dungeon_Battles_of_Winterspell.Enemies
         {
             get
             {
-                return EnemyType.Troll;
+                return EnemyType.UndeadWolf;
             }
         }
         public bool HasSwiftness
         {
             get
             {
-                return false;
+                return true;
             }
         }
         public string Name
         {
             get
             {
-                return "Troll";
+                return "Undead Wolf";
             }
         }
         public override string ToString()

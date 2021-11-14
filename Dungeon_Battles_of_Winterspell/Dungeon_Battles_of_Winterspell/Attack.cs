@@ -33,12 +33,11 @@ namespace Dungeon_Battles_of_Winterspell
         // Enemy
         ClubSmack,
         MightyChomp,
-        MoltenBreath,
-        SwordSwing,
+        LavaSpit,
+        FrailSwordStrike,
         Spooky,
         UnearthlyHowl,
-        PowerfulFist,
-
+        PowerfulPunchAndWereNotTalkingFruit,
         Unknown
     }
     public class Attack
@@ -72,37 +71,9 @@ namespace Dungeon_Battles_of_Winterspell
 
         public float CritChance { get; } // This will be if the attack lands on max damage
        
-        //public bool AttackHit
-        //{
-        //    get
-        //    {
-                
-        //    }
-        //}
-        //public bool Critical
-        //{
-        //    get
-        //    {
-        //        if (AttackHit && DamageInflicted == MaxDamage)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //}
-
-        //public bool AttackHit { get; private set; }
         public int DamageInflicted { get; private set; }
 
         public Range DamageRange { get; }
-
-        //public bool PerformAttack()
-        //{
-
-        //}
 
     }
 }

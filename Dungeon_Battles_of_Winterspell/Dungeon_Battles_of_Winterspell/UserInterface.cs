@@ -7,20 +7,10 @@ namespace Dungeon_Battles_of_Winterspell
 {
     public class UserInterface
     {
-        private Game game = new Game();
         private IPlayerWeapon weapon;
         TypeEffect typeEffect = new TypeEffect();
 
-        /// <summary>
-        /// The game begins! Displays the first story texts and then the character selection screen.
-        /// </summary>
-        public void BeginGame()
-        {
-            StoryText storyText = new StoryText();
-            //storyText.LoadingScreen();
-            //bool playerWillFight = storyText.OpeningStoryText();
-            DisplayCharacterSelect();
-        }
+        public PlayerCharacter Player { get; }
 
         /// <summary>
         /// Displays the menu of character choices. Once a player has selected a character, there will be remarking text and a character type will be set.
@@ -66,11 +56,10 @@ namespace Dungeon_Battles_of_Winterspell
                         break;
                 }
             }
-            game.CreateCharacter(charType); // Refers to the game class to take care of some meta details when a player is created.
             return charType;
         }
 
-        public IPlayerWeapon DisplayWeaponsAndSelect(Dictionary<int, IPlayerWeapon> weapons)
+        public IPlayerWeapon DisplayWeaponsAndSelect(IPlayerWeapon[] weapons)
         {
             Console.Clear();
             // A while loop to continue redisplaying weapon options and the request of a choice if the user would make an incorrect int.
@@ -78,25 +67,28 @@ namespace Dungeon_Battles_of_Winterspell
             while (valid)
             {
                 Console.WriteLine($"    Choose your weapon");
-            foreach(KeyValuePair<int, IPlayerWeapon> weapon in weapons)
+                int i = 1; // Menu numbering purposes
+            foreach (IPlayerWeapon weapon in weapons)
             {
-                // weapon.Key represents and int 1 - 3 for the value of player selection.
-                Console.WriteLine($"    {weapon.Key})   {weapon.Value.Name}");
+                    
+                // i represents and int 1 - 3 for the value of player selection.
+                Console.WriteLine($"    {i})   {weapon.Name}");
+                    i++;
             }
                 int userInput = CLIHelper.GetInteger($"    Your weapon sire:  ");
                 switch (userInput)
                 {
                     // Each weapons[i], i represents the key to correspond with the int input. That equates the local field weapon variable to become the Weapon value associated with that key.
                     case 1:
-                        weapon = weapons[1]; // Same as IWeapon weapon = new Weapon(); weapon is now = to the user selected weapon from the dictionary.
+                        weapon = weapons[0]; // Same as IWeapon weapon = new Weapon(); weapon is now = to the user selected weapon from the dictionary.
                         valid = false;
                         break;
                     case 2:
-                        weapon = weapons[2];
+                        weapon = weapons[1];
                         valid = false;
                         break;
                     case 3:
-                        weapon = weapons[3];
+                        weapon = weapons[2];
                         valid = false;
                         break;
                     default:
@@ -106,11 +98,9 @@ namespace Dungeon_Battles_of_Winterspell
                         break;
                 }
             }
-            Console.WriteLine($"The {weapon.Name}, an ardent choice!");
+            Console.WriteLine($"The {weapon.Name}, an ardent choice!"); // weapon is a public field that has been set to the user's weapon choice.
             Console.ReadKey();
-            // The game class has a public field of player. Game class is the only class allowed to instantiate the player. A property of PlayerCharacter is equated to that same player.
-            // This weapon the player has chosen is an IWeapon which is a property to be set on the player character. This next line sets the current and only player character's weapon to be this weapon selected.
-            game.PlayerCharacter.Weapon = weapon; 
+            
 
             // The player has made their choice.
             return weapon;
@@ -266,5 +256,33 @@ namespace Dungeon_Battles_of_Winterspell
             Console.WriteLine("You have completed the dungeon!");
         }
 
+        public void DisplayCombatMenu(Queue<ICharacter> turnQueue, PlayerCharacter player)
+        {
+            // Info regarding the turn Queue
+            Console.Clear();
+            string full = "Turn Order\n";
+            string chara;
+            foreach (ICharacter character in turnQueue)
+            {
+                if (character.IsPlayer)
+                {
+                    full += "You";
+                }
+                else
+                {
+                    chara = $"{character}\n";
+                    full += chara;
+                }
+            }
+            Console.WriteLine(full);
+            Console.WriteLine();
+
+            // Display Character Stats on opposite side of the screen
+         
+            Console.WriteLine($"Hp: {player.Health}\nWeapon:) {player.Weapon.Name}\nAttack 1:) {player.Weapon.Attack1}\nAttack 2:) {player.Weapon.Attack2}");
+            Console.WriteLine();
+        }
     }
+
+    
 }

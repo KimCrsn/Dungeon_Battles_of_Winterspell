@@ -68,7 +68,7 @@ namespace Dungeon_Battles_of_Winterspell
         }
 
         /// <summary>
-        /// Takes in a list of dungeons and returns a dungeon. The list was a manually set list of dungeons form the Game class which are looped through here.
+        /// Takes in a list of dungeons and returns a dungeon. The list is a manually set list of dungeons from the Game class which are looped through here.
         /// It checks to see if the first dungeon is not complete and it sets it to current. Otherwise it will loop until it finds a dungeon that is marked as 
         /// IsCurrent, and will set IsCurrent to false, Completed to true, and the next loop should find that the very next dungeon in the list is marked as IsCurrent.
         /// RETURNS THE CURRENT DUNGEON.

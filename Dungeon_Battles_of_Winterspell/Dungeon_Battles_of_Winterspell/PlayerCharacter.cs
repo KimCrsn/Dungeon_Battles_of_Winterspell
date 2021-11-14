@@ -4,21 +4,6 @@ using System.Text;
 
 namespace Dungeon_Battles_of_Winterspell
 {
-    // All of the player character options
-    public enum CharacterType
-    {
-        Enchantress,
-        Dwarf,
-        Woodelf,
-        Goblin,
-        Troll,
-        Firespitter,
-        Undead,
-        HauntingSpirit,
-        UndeadWolf,
-        DungeonDweller,
-        Uknown
-    }
 
     /// <summary>
     /// This class identifies the player and contains idle and updating properties to represent the character. The defaults will vary depended upon the player type enum passed into the con
@@ -30,14 +15,14 @@ namespace Dungeon_Battles_of_Winterspell
         /// PlayerCharacter knowing the CharacterType will determine every other aspect of calculation for the char.
         /// </summary>
         /// <param name="playerType"></param>
-        public PlayerCharacter(CharacterType playerType)
+        public PlayerCharacter(CharacterType playerType) // constructor which takes in a player type.
         {
             this.PlayerType = playerType;
         }
         public PlayerCharacter()
         {
 
-        }
+        } // empty constructor
 
         public bool IsPlayer
         {
@@ -68,15 +53,8 @@ namespace Dungeon_Battles_of_Winterspell
         //public EnemyType EnemyType { get; } = EnemyType.NotEnemy; // Player is not an enemy. THIS IS REQUIRED FOR THE ATTACK IN ENEMY CLASS ICHARACTER CONTRACT
         public IPlayerWeapon Weapon { get; set; }
         
-        public int Health { get; private set; } = 100;
+        public int Health { get; set; } = 100;
 
-        public void EstablishAllTraits()
-        {
-            EstablishDexterity();
-            EstablishIntelligence();
-            EstablishStrength();
-            CheckSwiftness();
-        }
         /// <summary>
         /// Initial establishment of health upon character creation.
         /// </summary>
@@ -108,7 +86,7 @@ namespace Dungeon_Battles_of_Winterspell
         /// <returns></returns>
         public void CheckSwiftness()
         {
-            if (Dexterity >= 5)
+            if (Dexterity >= 5 || PlayerType == CharacterType.Woodelf)
             {
                 HasSwiftness = true;
             }
@@ -117,8 +95,6 @@ namespace Dungeon_Battles_of_Winterspell
                 HasSwiftness = false;
             }
         }
-        public string NameDepiction { get; } // No need to set this, just for ICharacter purposes
-        public string NameReference { get; } // No need to set this, just for ICharacter purposes
 
         // Readonly so it can be passed in when the character is created using user input.
         public CharacterType PlayerType { get; }
@@ -189,16 +165,14 @@ namespace Dungeon_Battles_of_Winterspell
             Dexterity = dexterity;
         }
 
-
-        /// <summary>
-        /// When a character takes damage from another character, the health is checked to verify if dead is true or false, and also sets the current health.
-        /// </summary>
-        /// <param name="attack"></param>
-        //public void DamageTaken(Attack attack)
-        //{
-        //    int currHealth = this.Health - attack.DamageInflicted;
-        //    IsDead(currHealth); // Checks if the player is dead or not.
-        //}
+        // Establish all attributes listed above
+        public void EstablishAllTraits()
+        {
+            EstablishDexterity();
+            EstablishIntelligence();
+            EstablishStrength();
+            CheckSwiftness();
+        }
 
         /// <summary>
         /// Checks that the current health of the player when damage is taken, is not at or below 0. If it is not, return false. If yes, return true.
@@ -220,27 +194,3 @@ namespace Dungeon_Battles_of_Winterspell
     }
 }
 
-// Setting health to a defualt of 100 b/c ro can't be changed, but will fix later.
-
-//public int Health
-//{
-//    get
-//    {
-//        int health = 0;
-//        switch (PlayerType)
-//        {
-//            case CharacterType.Dwarf:
-//                health = 125;
-//                break;
-//            case CharacterType.Enchantress:
-//                health = 110;
-//                break;
-//            case CharacterType.Woodelf:
-//                health = 100;
-//                break;
-//            default:
-//                return 100; // This should never be reached.
-//        }
-//        return health;
-//    }
-//}
